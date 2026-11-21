@@ -6,6 +6,8 @@ The team reports that the TA requested ZooLake after submission of the [Galaxy10
 
 ## Progress milestone
 
+This section records the original grouped run. A follow-up freezes the actual group assignments and compares both existing baselines with 31 additional pixel-based shape and texture features. [Read the matched experiment](results/morphology/README.md).
+
 | Measured item | Result |
 | --- | ---: |
 | Original Eawag images and labels | 17,943 / 35 |

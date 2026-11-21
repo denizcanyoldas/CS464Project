@@ -12,6 +12,7 @@ from sklearn.svm import SVC
 from threadpoolctl import threadpool_limits
 
 from .images import d4_views, load_canvas
+from .morphology import morphology_features
 
 
 def image_features(image: Image.Image) -> np.ndarray:
@@ -58,18 +59,25 @@ def _local_path(root: Path, relative: str) -> Path:
     return path
 
 
-def _feature_array(root, rows, side, multi_view):
+def describe_view(view, morphology):
+    vector = image_features(view)
+    if morphology:
+        vector = np.concatenate((vector, morphology_features(view)))
+    return vector
+
+
+def _feature_array(root, rows, side, multi_view, *, morphology=False):
     features = []
     for row in rows:
         canvas = load_canvas(_local_path(root, row["path"]), side)
         views = d4_views(canvas) if multi_view else (canvas,)
-        features.append([image_features(view) for view in views])
+        features.append([describe_view(view, morphology) for view in views])
     return np.asarray(features)
 
 
 def _build_model(name, config):
     balance = "balanced" if config["class_weight"] == "balanced" else None
-    if name == "lr":
+    if name in {"lr", "lr-morph"}:
         return make_pipeline(
             StandardScaler(),
             LogisticRegression(
@@ -99,7 +107,8 @@ def _build_model(name, config):
 
 def _predict(bundle, rows, root, tta, threads):
     model = bundle["model"]
-    features = _feature_array(root, rows, bundle["image_side"], tta)
+    features = _feature_array(root, rows, bundle["image_side"], tta,
+                              morphology=bundle.get("morphology", False))
     with threadpool_limits(limits=threads):
         if tta:
             probabilities = model.predict_proba(features.reshape(-1, features.shape[-1]))
@@ -110,7 +119,8 @@ def _predict(bundle, rows, root, tta, threads):
 
 def train_classical(model_name, train, validation, root, labels, config, out_dir):
     augment = config["augment"] == "d4"
-    features = _feature_array(root, train, config["image_side"], augment)
+    morphology = model_name == "lr-morph"
+    features = _feature_array(root, train, config["image_side"], augment, morphology=morphology)
     encoder = LabelEncoder().fit(labels)
     if encoder.classes_.tolist() != labels:
         raise ValueError("Split labels must be sorted to preserve probability-column identity.")
@@ -131,7 +141,8 @@ def train_classical(model_name, train, validation, root, labels, config, out_dir
             fit_options[f"{model.steps[-1][0]}__sample_weight"] = weights
     with threadpool_limits(limits=config["threads"]):
         model.fit(features.reshape(-1, features.shape[-1]), target, **fit_options)
-    bundle = {"model": model, "image_side": config["image_side"], "labels": labels}
+    bundle = {"model": model, "image_side": config["image_side"], "labels": labels,
+              "morphology": morphology}
     probabilities = _predict(bundle, validation, root, config["tta"], config["threads"])
     joblib.dump(bundle, out_dir / "model.joblib")
     return probabilities

@@ -13,7 +13,7 @@ import time
 import tomllib
 
 
-CLASSICAL = ("lr", "svm", "xgb")
+CLASSICAL = ("lr", "lr-morph", "svm", "xgb")
 CNN = ("scratch", "efficientnet-b0")
 MODEL_FILES = {**dict.fromkeys(CLASSICAL, "model.joblib"), **dict.fromkeys(CNN, "checkpoint.pt")}
 
@@ -35,6 +35,7 @@ def make_parser():
     split.add_argument("--group-by", choices=("group", "acquisition_day"))
     split.add_argument("--split-seed", type=int)
     split.add_argument("--subset-seeds", type=int, nargs="+")
+    split.add_argument("--fold-map", type=Path, help="Restore fixed group,split assignments from CSV")
 
     train = commands.add_parser("train", help="Fit on train and score on validation only")
     train.add_argument("--data-root", type=Path)
@@ -285,6 +286,7 @@ def main():
                 output, args.strategy or options["strategy"],
                 args.split_seed if args.split_seed is not None else options["seed"],
                 args.subset_seeds or options["subset_seeds"], group_by=args.group_by or options["group_by"],
+                fold_map=args.fold_map,
             )
             print(f"Split artifacts: {output}")
             return 0
