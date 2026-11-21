@@ -1,0 +1,319 @@
+{
+  "partition": "validation",
+  "n_eval": 2690,
+  "label_support": {
+    "aphanizomenon": 41,
+    "asplanchna": 110,
+    "asterionella": 48,
+    "bosmina": 14,
+    "brachionus": 25,
+    "ceratium": 147,
+    "chaoborus": 3,
+    "conochilus": 42,
+    "copepod_skins": 5,
+    "cyclops": 155,
+    "daphnia": 118,
+    "daphnia_skins": 9,
+    "diaphanosoma": 130,
+    "diatom_chain": 4,
+    "dinobryon": 595,
+    "dirt": 15,
+    "eudiaptomus": 97,
+    "filament": 48,
+    "fish": 41,
+    "fragilaria": 35,
+    "hydra": 1,
+    "kellicottia": 94,
+    "keratella_cochlearis": 12,
+    "keratella_quadrata": 55,
+    "leptodora": 38,
+    "maybe_cyano": 164,
+    "nauplius": 273,
+    "paradileptus": 50,
+    "polyarthra": 14,
+    "rotifers": 88,
+    "synchaeta": 16,
+    "trichocerca": 38,
+    "unknown": 38,
+    "unknown_plankton": 14,
+    "uroglena": 113
+  },
+  "minority_labels_from_full_training": [
+    "bosmina",
+    "chaoborus",
+    "copepod_skins",
+    "daphnia_skins",
+    "diatom_chain",
+    "hydra",
+    "keratella_cochlearis",
+    "polyarthra",
+    "unknown_plankton"
+  ],
+  "angles_degrees": [
+    0,
+    45,
+    90,
+    135,
+    180,
+    225,
+    270,
+    315
+  ],
+  "direction": "counterclockwise",
+  "device": "cpu",
+  "split_sha256": "58e6fc7fc5e1935c43f035922b273440a6609e45d6050a86e2c11a251249bc91",
+  "model_sha256": "d2eea4396a4cc5311ff6002aaa35a4bc6b008da0d60aa9cee0494a99236bbc9b",
+  "model_config": {
+    "model": "lr",
+    "seed": 464,
+    "fraction": 100,
+    "augment": "none",
+    "tta": false,
+    "image_side": 128,
+    "class_weight": "balanced",
+    "regularization_c": 1.0,
+    "threads": 4,
+    "epochs": 6,
+    "batch_size": 64,
+    "learning_rate": 0.001,
+    "device": "auto",
+    "workers": 0
+  },
+  "versions": {
+    "python": "3.13.3",
+    "machine": "arm64",
+    "numpy": "2.2.5",
+    "Pillow": "11.2.1",
+    "scipy": "1.17.0",
+    "scikit-learn": "1.8.0",
+    "matplotlib": "3.10.1",
+    "torch": "2.10.0",
+    "torchvision": "0.25.0",
+    "xgboost": "3.1.3"
+  },
+  "rotation_preprocessing": {
+    "canonical_image_side": 128,
+    "outer_black_border_pixels": 1,
+    "reserved_bicubic_support_pixels_per_roi_edge": 2,
+    "unchanged_roi_count": 1517,
+    "shrunk_roi_count": 1173,
+    "retained_long_edge_ratio": {
+      "minimum": 0.65625,
+      "mean": 0.9104308261859084,
+      "median": 1.0
+    },
+    "resizing": "bilinear",
+    "diagonal_resampling": "bicubic",
+    "fill_rgb": [
+      0,
+      0,
+      0
+    ],
+    "protocol": "Decode the EXIF-oriented RGB ROI and use the model's canonical size when the centered rectangle and its bicubic support fit within the black border at any angle. For other ROIs, choose the largest safe long edge with the canonical aspect ratio rounded to pixels and resize from the source. The retained ratio is relative to the canonical long edge. All views of each ROI share one scale. Odd multiples of 45 degrees are exact quarter turns of the interpolated 45-degree canvas."
+  },
+  "summary_protocol": "Mean and minimum across all eight angles, including 0, for each view mode.",
+  "per_angle": [
+    {
+      "angle_degrees": 0,
+      "view": "single",
+      "macro_f1": 0.47145834425829836,
+      "minority_macro_f1": 0.15485689761457813,
+      "accuracy": 0.642007434944238,
+      "agreement_vs_0": 1.0
+    },
+    {
+      "angle_degrees": 0,
+      "view": "d4",
+      "macro_f1": 0.4909767877734342,
+      "minority_macro_f1": 0.2004148629148629,
+      "accuracy": 0.6531598513011152,
+      "agreement_vs_0": 1.0
+    },
+    {
+      "angle_degrees": 45,
+      "view": "single",
+      "macro_f1": 0.4586241437808265,
+      "minority_macro_f1": 0.1769681653402584,
+      "accuracy": 0.6275092936802974,
+      "agreement_vs_0": 0.7657992565055762
+    },
+    {
+      "angle_degrees": 45,
+      "view": "d4",
+      "macro_f1": 0.48650282136354567,
+      "minority_macro_f1": 0.2327926661432975,
+      "accuracy": 0.6460966542750929,
+      "agreement_vs_0": 0.8483271375464684
+    },
+    {
+      "angle_degrees": 90,
+      "view": "single",
+      "macro_f1": 0.4589697467803187,
+      "minority_macro_f1": 0.15161513283686803,
+      "accuracy": 0.6271375464684015,
+      "agreement_vs_0": 0.7799256505576209
+    },
+    {
+      "angle_degrees": 90,
+      "view": "d4",
+      "macro_f1": 0.4909767877734342,
+      "minority_macro_f1": 0.2004148629148629,
+      "accuracy": 0.6531598513011152,
+      "agreement_vs_0": 1.0
+    },
+    {
+      "angle_degrees": 135,
+      "view": "single",
+      "macro_f1": 0.4604876153845942,
+      "minority_macro_f1": 0.16206254495015013,
+      "accuracy": 0.6301115241635687,
+      "agreement_vs_0": 0.7643122676579925
+    },
+    {
+      "angle_degrees": 135,
+      "view": "d4",
+      "macro_f1": 0.48650282136354567,
+      "minority_macro_f1": 0.2327926661432975,
+      "accuracy": 0.6460966542750929,
+      "agreement_vs_0": 0.8483271375464684
+    },
+    {
+      "angle_degrees": 180,
+      "view": "single",
+      "macro_f1": 0.46572003675019,
+      "minority_macro_f1": 0.16077415685258822,
+      "accuracy": 0.6397769516728624,
+      "agreement_vs_0": 0.846096654275093
+    },
+    {
+      "angle_degrees": 180,
+      "view": "d4",
+      "macro_f1": 0.4909767877734342,
+      "minority_macro_f1": 0.2004148629148629,
+      "accuracy": 0.6531598513011152,
+      "agreement_vs_0": 1.0
+    },
+    {
+      "angle_degrees": 225,
+      "view": "single",
+      "macro_f1": 0.4579345227204851,
+      "minority_macro_f1": 0.2357669476808437,
+      "accuracy": 0.6193308550185873,
+      "agreement_vs_0": 0.7464684014869889
+    },
+    {
+      "angle_degrees": 225,
+      "view": "d4",
+      "macro_f1": 0.48650282136354567,
+      "minority_macro_f1": 0.2327926661432975,
+      "accuracy": 0.6460966542750929,
+      "agreement_vs_0": 0.8483271375464684
+    },
+    {
+      "angle_degrees": 270,
+      "view": "single",
+      "macro_f1": 0.44128037997973996,
+      "minority_macro_f1": 0.12579301789828104,
+      "accuracy": 0.6178438661710037,
+      "agreement_vs_0": 0.7669144981412639
+    },
+    {
+      "angle_degrees": 270,
+      "view": "d4",
+      "macro_f1": 0.4909767877734342,
+      "minority_macro_f1": 0.2004148629148629,
+      "accuracy": 0.6531598513011152,
+      "agreement_vs_0": 1.0
+    },
+    {
+      "angle_degrees": 315,
+      "view": "single",
+      "macro_f1": 0.4528455516396189,
+      "minority_macro_f1": 0.16476379013143722,
+      "accuracy": 0.6200743494423792,
+      "agreement_vs_0": 0.7650557620817844
+    },
+    {
+      "angle_degrees": 315,
+      "view": "d4",
+      "macro_f1": 0.48650282136354567,
+      "minority_macro_f1": 0.2327926661432975,
+      "accuracy": 0.6460966542750929,
+      "agreement_vs_0": 0.8483271375464684
+    }
+  ],
+  "by_view": {
+    "single": {
+      "macro_f1": {
+        "mean": 0.458415042661759,
+        "worst": 0.44128037997973996,
+        "worst_angles_degrees": [
+          270
+        ]
+      },
+      "minority_macro_f1": {
+        "mean": 0.16657508166312562,
+        "worst": 0.12579301789828104,
+        "worst_angles_degrees": [
+          270
+        ]
+      },
+      "accuracy": {
+        "mean": 0.6279739776951673,
+        "worst": 0.6178438661710037,
+        "worst_angles_degrees": [
+          270
+        ]
+      },
+      "agreement_vs_0": {
+        "mean": 0.80432156133829,
+        "worst": 0.7464684014869889,
+        "worst_angles_degrees": [
+          225
+        ]
+      }
+    },
+    "d4": {
+      "macro_f1": {
+        "mean": 0.4887398045684899,
+        "worst": 0.48650282136354567,
+        "worst_angles_degrees": [
+          45,
+          135,
+          225,
+          315
+        ]
+      },
+      "minority_macro_f1": {
+        "mean": 0.2166037645290802,
+        "worst": 0.2004148629148629,
+        "worst_angles_degrees": [
+          0,
+          90,
+          180,
+          270
+        ]
+      },
+      "accuracy": {
+        "mean": 0.6496282527881041,
+        "worst": 0.6460966542750929,
+        "worst_angles_degrees": [
+          45,
+          135,
+          225,
+          315
+        ]
+      },
+      "agreement_vs_0": {
+        "mean": 0.9241635687732341,
+        "worst": 0.8483271375464684,
+        "worst_angles_degrees": [
+          45,
+          135,
+          225,
+          315
+        ]
+      }
+    }
+  }
+}

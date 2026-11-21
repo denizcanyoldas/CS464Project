@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "split_sha256": "58e6fc7fc5e1935c43f035922b273440a6609e45d6050a86e2c11a251249bc91",
+  "input_images": {
+    "train": 12556,
+    "validation": 2690
+  },
+  "low_contrast_excluded": {
+    "train": 2,
+    "validation": 1
+  },
+  "image_pairs_scanned": 33775640,
+  "d4_comparisons_scanned": 270205120,
+  "parameters": {
+    "thumbnail_pixels": [
+      32,
+      32
+    ],
+    "thumbnail_transform": "EXIF-oriented grayscale, Lanczos resize, intensities divided by 255",
+    "min_thumbnail_stddev": 0.02,
+    "max_aspect_ratio_factor_inclusive": 1.05,
+    "relative_l2_definition": "L2 difference divided by the larger thumbnail norm",
+    "primary": {
+      "min_cosine": 0.995,
+      "max_relative_l2": 0.1
+    },
+    "sensitivity": {
+      "min_cosine": 0.98,
+      "max_relative_l2": 0.2
+    }
+  },
+  "results": {
+    "aligned_primary": {
+      "unique_pairs": 0,
+      "distinct_validation_images": 0,
+      "distinct_train_images": 0,
+      "same_label_pairs": 0,
+      "same_utc_day_pairs": 0,
+      "pairs_with_capture_timestamps": 0,
+      "min_capture_gap_seconds": null,
+      "pairs_at_most_30_seconds_apart": 0,
+      "pairs_at_most_180_seconds_apart": 0,
+      "label_pairs": []
+    },
+    "d4_primary": {
+      "unique_pairs": 0,
+      "distinct_validation_images": 0,
+      "distinct_train_images": 0,
+      "same_label_pairs": 0,
+      "same_utc_day_pairs": 0,
+      "pairs_with_capture_timestamps": 0,
+      "min_capture_gap_seconds": null,
+      "pairs_at_most_30_seconds_apart": 0,
+      "pairs_at_most_180_seconds_apart": 0,
+      "label_pairs": []
+    },
+    "d4_sensitivity": {
+      "unique_pairs": 610,
+      "distinct_validation_images": 60,
+      "distinct_train_images": 244,
+      "same_label_pairs": 603,
+      "same_utc_day_pairs": 571,
+      "pairs_with_capture_timestamps": 610,
+      "min_capture_gap_seconds": 115.955635,
+      "pairs_at_most_30_seconds_apart": 0,
+      "pairs_at_most_180_seconds_apart": 9,
+      "label_pairs": [
+        {
+          "validation": "maybe_cyano",
+          "train": "uroglena",
+          "count": 1
+        },
+        {
+          "validation": "unknown",
+          "train": "unknown",
+          "count": 1
+        },
+        {
+          "validation": "unknown",
+          "train": "uroglena",
+          "count": 5
+        },
+        {
+          "validation": "uroglena",
+          "train": "unknown",
+          "count": 1
+        },
+        {
+          "validation": "uroglena",
+          "train": "uroglena",
+          "count": 602
+        }
+      ]
+    }
+  },
+  "interpretation": "The thresholds identify visually similar candidates. Capture identity requires independent evidence. Crop shifts, non-D4 orientations, and illumination changes can evade the screen. Related captures from one acquisition session can still span partitions."
+}

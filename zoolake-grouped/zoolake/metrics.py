@@ -45,6 +45,10 @@ def save_evaluation(
         "minority_labels_from_full_training": sorted(minority),
         "selected_training_counts": train_counts, "views": scores,
     }
+    if "single" in predictions and "d4" in predictions:
+        payload["single_d4_prediction_agreement"] = float(
+            np.mean(predictions["single"].argmax(axis=1) == predictions["d4"].argmax(axis=1))
+        )
     (destination / "metrics.json").write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
     with (destination / "predictions.csv").open("w", newline="", encoding="utf-8") as output:
         writer = csv.writer(output)

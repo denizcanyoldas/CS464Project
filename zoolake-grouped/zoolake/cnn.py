@@ -16,7 +16,7 @@ try:
 except ImportError as error:
     raise ImportError("Install requirements-cnn.txt to run the CNN experiments.") from error
 
-from .images import d4_view, load_canvas
+from .images import load_canvas
 
 
 CHANNEL_MEAN = torch.tensor([0.485, 0.456, 0.406]).view(3, 1, 1)
@@ -24,7 +24,7 @@ CHANNEL_STD = torch.tensor([0.229, 0.224, 0.225]).view(3, 1, 1)
 
 
 class RoiImages(Dataset):
-    def __init__(self, rows, root, labels, side, *, augment=False, seed=0):
+    def __init__(self, rows, root, labels, side, *, augment=False, seed=0, cache=False):
         self.rows = rows
         self.root = Path(root)
         self.index = {label: index for index, label in enumerate(labels)}
@@ -32,18 +32,23 @@ class RoiImages(Dataset):
         self.augment = augment
         self.seed = seed
         self.epoch = 0
+        self.cache = {} if cache else None
 
     def __len__(self):
         return len(self.rows)
 
     def __getitem__(self, index):
         row = self.rows[index]
-        image = load_canvas(self.root / row["path"], self.side)
+        rgb = self.cache.get(index) if self.cache is not None else None
+        if rgb is None:
+            image = load_canvas(self.root / row["path"], self.side)
+            rgb = torch.from_numpy(np.array(image)).permute(2, 0, 1)
+            if self.cache is not None:
+                self.cache[index] = rgb
         if self.augment:
             transform = random.Random(f"{self.seed}:{self.epoch}:{index}").randrange(8)
-            image = d4_view(image, transform)
-        rgb = torch.from_numpy(np.array(image)).permute(2, 0, 1).float() / 255
-        return (rgb - CHANNEL_MEAN) / CHANNEL_STD, self.index[row["label"]]
+            rgb = _tensor_view(rgb, transform)
+        return (rgb.float() / 255 - CHANNEL_MEAN) / CHANNEL_STD, self.index[row["label"]]
 
 
 def resolve_device(name):
@@ -94,22 +99,36 @@ def _tensor_view(batch, index):
     return image.rot90(index % 4, dims=(-2, -1)) if index % 4 else image
 
 
-def _predict(model, loader, device, tta):
+def _predict(model, loader, device, tta, timing=None):
     model.eval()
     single_view, pooled = [], []
+    single_seconds = 0.0
+    d4_seconds = 0.0
     with torch.inference_mode():
         for images, _ in loader:
             images = images.to(device)
+            if timing is not None and device.type == "mps":
+                torch.mps.synchronize()
+            if timing is not None and device.type == "cuda":
+                torch.cuda.synchronize()
+            started = time.perf_counter()
             single = model(images).softmax(dim=1)
             single_view.append(single.cpu())
+            finished_single = time.perf_counter()
+            single_seconds += finished_single - started
             if tta:
                 views = [single]
                 for index in range(1, 8):
                     views.append(model(_tensor_view(images, index)).softmax(dim=1))
                 pooled.append(torch.stack(views).mean(dim=0).cpu())
+                d4_seconds += time.perf_counter() - started
     predictions = {"single": torch.cat(single_view).numpy()}
     if tta:
         predictions["d4"] = torch.cat(pooled).numpy()
+    if timing is not None:
+        timing.update(images=len(loader.dataset), single_forward_seconds=single_seconds)
+        if tta:
+            timing["d4_forward_seconds"] = d4_seconds
     return predictions
 
 
@@ -122,8 +141,9 @@ def _balanced_weights(rows, labels, device):
 
 def _loaders(train, validation, root, labels, config):
     seed, side = config["seed"], config["image_side"]
-    training = RoiImages(train, root, labels, side, augment=config["augment"] == "d4", seed=seed)
-    evaluation = RoiImages(validation, root, labels, side)
+    cache = config["workers"] == 0
+    training = RoiImages(train, root, labels, side, augment=config["augment"] == "d4", seed=seed, cache=cache)
+    evaluation = RoiImages(validation, root, labels, side, cache=cache)
     training_loader = DataLoader(
         training, batch_size=config["batch_size"], num_workers=config["workers"], shuffle=True,
         generator=torch.Generator().manual_seed(seed),
@@ -134,15 +154,15 @@ def _loaders(train, validation, root, labels, config):
 
 def _fit_epoch(model, loader, optimizer, loss_fn, device):
     model.train()
-    loss_total = 0.0
+    loss_total = torch.zeros((), device=device)
     for images, targets in loader:
         images, targets = images.to(device), targets.to(device)
         optimizer.zero_grad(set_to_none=True)
         loss = loss_fn(model(images), targets)
         loss.backward()
         optimizer.step()
-        loss_total += loss.detach().item() * targets.size(0)
-    return loss_total / len(loader.dataset)
+        loss_total += loss.detach() * targets.size(0)
+    return loss_total.item() / len(loader.dataset)
 
 
 def train_cnn(model_name, train, validation, root, labels, config, out_dir):
@@ -187,12 +207,14 @@ def train_cnn(model_name, train, validation, root, labels, config, out_dir):
         "model": model_name, "weights": best_state, "labels": labels,
         "image_side": config["image_side"], "batch_size": config["batch_size"], "threads": config["threads"],
     }, out_dir / "checkpoint.pt")
+    timing = {}
+    final_predictions = _predict(model, val_loader, device, config["tta"], timing)
     training_log = {
         "device": str(device), "best_epoch": best_epoch, "selection_metric": "single_view_validation_macro_f1",
-        "class_weight": config["class_weight"], "epochs": history,
+        "class_weight": config["class_weight"], "epochs": history, "inference_timing": timing,
     }
     (out_dir / "training_log.json").write_text(json.dumps(training_log, indent=2) + "\n", encoding="utf-8")
-    return _predict(model, val_loader, device, config["tta"])
+    return final_predictions
 
 
 def predict_cnn(out_dir, rows, root, tta, device):

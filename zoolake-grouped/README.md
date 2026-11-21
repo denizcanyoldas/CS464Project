@@ -25,6 +25,33 @@ The result uses one **full-training, no-augmentation, single-view** logistic reg
 
 The audit inventory, fixed split manifest, trained model, and predictions are generated locally under `artifacts/` by the commands below.
 
+## Final study
+
+The validation-selected EfficientNet-B0 achieved **0.7800 macro-F1, 0.5779 minority macro-F1, and 90.00% accuracy** on 2,691 final-test images. The model used the full training fold, seed 464, class-balanced training without geometric augmentation, and eight-view D4 probability averaging at inference.
+
+- [Study findings and reproduction](results/final-study/README.md)
+- [Validation table](results/final-study/validation/summary.md) and [learning curves](results/final-study/validation/learning_curves.pdf)
+- [Rotation sweep](results/final-study/rotation_summary.csv) and [loss weighting comparison](results/final-study/weighting.csv)
+- [Frozen selection](results/final-study/selection.json), [per-class test results](results/final-study/test/test_per_class.csv), and [normalized test confusion matrix](results/final-study/test/test_confusion.pdf)
+
+The [final-study matrix](configs/final_study.toml) uses the same image manifest as the progress run. The [protocol and selection rule](DECISIONS.md#final-study-protocol) were fixed before final-test scoring.
+
+```bash
+python -m pip install -r requirements-cnn.txt -r requirements-xgb.txt
+python scripts/near_duplicate_screen.py
+python scripts/run_final_study.py scratch transfer weighting
+python scripts/run_final_study.py svm
+```
+
+The CNN stages select native Metal by default. Use `--device cuda` or `--device cpu` for the corresponding local hardware. The runner checks the saved settings and hashes before resuming completed runs. On this Mac, the XGBoost wheel used the OpenMP library supplied by the local scikit-learn wheel:
+
+```bash
+openmp_dir="$(python -c 'from pathlib import Path; import sklearn; print(Path(sklearn.__file__).parent / ".dylibs")')"
+DYLD_LIBRARY_PATH="$openmp_dir" python scripts/run_final_study.py xgb
+```
+
+Run `python -m zoolake.study --help`, `python -m zoolake.rotations --help`, and `python -m zoolake.finalize --help` for the aggregation, angle sweep, and locked holdout entry points. Each image has one rotation-safe canvas shared across the eight angles. The sweep resizes only crops that need extra clearance, so its 0° score belongs to the angle sweep. The ordinary validation score uses the original canvas.
+
 ## Reproduce the baseline
 
 Run from the repository root. The raw data and Python environment are in sibling directories `../data` and `../.venv`. The project was exercised with Python 3.13.3.
@@ -89,10 +116,10 @@ python -m zoolake train --model xgb --fraction 25 --out artifacts/runs/xgb-f25
 python -m zoolake plot-curve --runs artifacts/runs/scratch-f25-{none,d4} --out artifacts/curves/scratch
 
 # After selecting a frozen run
-python -m zoolake evaluate-test --run artifacts/runs/SELECTED_RUN --view single --out artifacts/final-test
+python -m zoolake evaluate-test --run artifacts/runs/SELECTED_RUN --view single --out artifacts/holdout-output
 ```
 
-EfficientNet-B0 downloads its ImageNet weights on the first run unless they are cached. The CPU baseline is sufficient for the initial progress milestone. The experiment grid is unrun.
+EfficientNet-B0 downloads its ImageNet weights on the first run unless they are cached. The commands above also work for exploratory runs. Use the frozen selection wrapper in the final study to reproduce the recorded holdout protocol.
 
 ## Report source
 
