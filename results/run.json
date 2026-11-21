@@ -1,0 +1,41 @@
+{
+  "source": "https://opendata.eawag.ch/dataset/52b6ba86-5ecb-448c-8c01-eec7cb209dc7/resource/1cc785fa-36c2-447d-bb11-92ce1d1f3f2d/download/data.zip",
+  "archive_sha256": "ce038e19af73dd5aff0beb9ed0dc012bb0314efeb341337667b62d1e1c383d4f",
+  "seed": 464,
+  "published_counts": {
+    "train": 12560,
+    "test": 2692,
+    "val": 2691
+  },
+  "clean_counts": {
+    "train": 12557,
+    "val": 2690,
+    "test": 2690
+  },
+  "classes": 35,
+  "image_files": 17943,
+  "excluded_images": 6,
+  "duplicate_groups": 3,
+  "features": 379,
+  "input_side": 128,
+  "width_range": [
+    16,
+    2832
+  ],
+  "height_range": [
+    20,
+    2176
+  ],
+  "metric_split": "val",
+  "demo_path": "data/zooplankton_0p5x/asterionella/training_data/SPC-EAWAG-0P5X-1559498413196836-6403837471201-000039-747-1646-480-36-60.jpeg",
+  "demo_label": "asterionella",
+  "python": "3.12.14",
+  "packages": {
+    "numpy": "2.2.6",
+    "scipy": "1.18.1",
+    "scikit-learn": "1.7.2",
+    "opencv-python-headless": "4.12.0.88",
+    "Pillow": "11.3.0",
+    "threadpoolctl": "3.8.0"
+  }
+}

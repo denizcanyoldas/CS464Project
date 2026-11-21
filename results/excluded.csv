@@ -1,0 +1,7 @@
+path,label,width,height,pixel_sha256,listed_splits,reason
+data/zooplankton_0p5x/asplanchna/training_data/SPC-EAWAG-0P5X-1528850008503168-564006655548-019979-040-2066-568-76-56.jpeg,asplanchna,76,56,e48cca1712702add45a4c9bc717e45f51f91c54ca6dcf8fbbe0af95b41fbce47,,conflicting_labels
+data/zooplankton_0p5x/asterionella/training_data/SPC-EAWAG-0P5X-1559498570246055-6403994484253-001609-528-1444-1354-100-100.jpeg,asterionella,100,100,c46808cd14e8896cd6f3882f5074f97bd8e8d03142356677136b69f230252532,,conflicting_labels
+data/zooplankton_0p5x/dinobryon/training_data/SPC-EAWAG-0P5X-1528850008503168-564006655548-019979-040-2066-568-76-56.jpeg,dinobryon,76,56,e48cca1712702add45a4c9bc717e45f51f91c54ca6dcf8fbbe0af95b41fbce47,train|train,conflicting_labels
+data/zooplankton_0p5x/dinobryon/training_data/SPC-EAWAG-0P5X-1559498570246055-6403994484253-001609-528-1444-1354-100-100.jpeg,dinobryon,100,100,c46808cd14e8896cd6f3882f5074f97bd8e8d03142356677136b69f230252532,train|test,conflicting_labels
+data/zooplankton_0p5x/polyarthra/training_data/SPC-EAWAG-0P5X-1589537326874154-10282734293288-005169-028-1252-974-40-64.jpeg,polyarthra,40,64,1344b9b77901129c7419cd365b422bc8a3e0b68817b9d90f45e13f27b7cd4505,,conflicting_labels
+data/zooplankton_0p5x/rotifers/training_data/SPC-EAWAG-0P5X-1589537326874154-10282734293288-005169-028-1252-974-40-64.jpeg,rotifers,40,64,1344b9b77901129c7419cd365b422bc8a3e0b68817b9d90f45e13f27b7cd4505,val|test,conflicting_labels
