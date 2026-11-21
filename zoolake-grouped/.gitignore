@@ -1,0 +1,12 @@
+/.venv/
+__pycache__/
+*.py[cod]
+/.mpl-cache/
+/data/
+/artifacts/
+/output/
+.DS_Store
+*.aux
+*.fls
+*.log
+*.synctex.gz
