@@ -1,4 +1,4 @@
-"""Refit the repository-root main baseline on this experiment's grouped folds."""
+"""Refit the legacy provider-split baseline on this experiment's grouped folds."""
 import argparse
 import csv
 from pathlib import Path
@@ -8,7 +8,7 @@ import numpy as np
 from PIL import Image
 from threadpoolctl import threadpool_limits
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "legacy-provider-split"))
 from train import fit, scores
 from features import describe, prepare
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))

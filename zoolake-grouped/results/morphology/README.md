@@ -57,7 +57,7 @@ for %M in (lr lr-morph) do python report/quarter_turns.py --run artifacts/runs/%
 python -m unittest discover -s tests -v
 ```
 
-To reproduce the optional `main` reference, switch to an environment installed from the repository-root requirements. From `zoolake-grouped`, run the following using the same extracted data and split.
+To reproduce the optional `main` reference, switch to an environment installed from `legacy-provider-split/requirements.txt`. From `zoolake-grouped`, run the following using the same extracted data and split.
 
 ```cmd
 python report/main_on_grouped.py --data-root "%ZOOLAKE_DATA_ROOT%" --split artifacts/splits/splits.json --out artifacts/runs/main.csv
