@@ -1,0 +1,49 @@
+{
+  "device": "mps",
+  "best_epoch": 6,
+  "selection_metric": "single_view_validation_macro_f1",
+  "class_weight": "balanced",
+  "epochs": [
+    {
+      "epoch": 1,
+      "train_loss": 2.5695558896145267,
+      "validation_macro_f1": 0.12183770657506915,
+      "seconds": 11.52198849999695
+    },
+    {
+      "epoch": 2,
+      "train_loss": 1.9817620186564193,
+      "validation_macro_f1": 0.2691835751593635,
+      "seconds": 8.76211958299973
+    },
+    {
+      "epoch": 3,
+      "train_loss": 1.6286015214339757,
+      "validation_macro_f1": 0.4070322493710999,
+      "seconds": 8.78522887500003
+    },
+    {
+      "epoch": 4,
+      "train_loss": 1.4719150393736062,
+      "validation_macro_f1": 0.4526140704906613,
+      "seconds": 8.76685941699543
+    },
+    {
+      "epoch": 5,
+      "train_loss": 1.2503462612496017,
+      "validation_macro_f1": 0.41002156294937886,
+      "seconds": 8.77964866599359
+    },
+    {
+      "epoch": 6,
+      "train_loss": 1.0158951179963762,
+      "validation_macro_f1": 0.536212303855942,
+      "seconds": 8.759564083011355
+    }
+  ],
+  "inference_timing": {
+    "images": 2690,
+    "single_forward_seconds": 1.2757316259812796,
+    "d4_forward_seconds": 10.13530949698179
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "config": {
+    "model": "efficientnet-b0",
+    "seed": 465,
+    "fraction": 100,
+    "augment": "d4",
+    "tta": true,
+    "image_side": 96,
+    "class_weight": "balanced",
+    "regularization_c": 1.0,
+    "threads": 4,
+    "epochs": 6,
+    "batch_size": 64,
+    "learning_rate": 0.001,
+    "device": "mps",
+    "workers": 0
+  },
+  "split_sha256": "9d0e0e2661ab8bd5f5eca506cb75049566931d31e14124a24243e3bb5e511124",
+  "model_file": "checkpoint.pt",
+  "model_sha256": "27e25f21f7a8b10b12827ee5d6f33483c2ff1871b9abcd324180f669c2b9c848",
+  "versions": {
+    "python": "3.13.3",
+    "machine": "arm64",
+    "numpy": "2.2.5",
+    "Pillow": "11.2.1",
+    "scipy": "1.17.0",
+    "scikit-learn": "1.8.0",
+    "matplotlib": "3.10.1",
+    "torch": "2.10.0",
+    "torchvision": "0.25.0",
+    "xgboost": "3.1.3"
+  },
+  "training_images": 12556,
+  "validation_images": 2690,
+  "fit_and_predict_seconds": 196.59519583400106
+}
