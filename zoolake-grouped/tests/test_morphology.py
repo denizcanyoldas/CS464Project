@@ -1,4 +1,5 @@
 from pathlib import Path
+from importlib.util import find_spec
 from tempfile import TemporaryDirectory
 import unittest
 
@@ -6,8 +7,9 @@ import numpy as np
 from PIL import Image
 
 from zoolake.classical import predict_classical, train_classical
-from zoolake.images import d4_views
+from zoolake.images import d4_views, load_canvas
 from zoolake.morphology import morphology_features
+from zoolake.rotations import _predictor
 from zoolake.splits import _restore_folds
 
 
@@ -38,10 +40,20 @@ class MorphologyTests(unittest.TestCase):
             val = [row for row in rows if "2" in row["path"]]
             config = dict(seed=464, image_side=16, augment="none", class_weight="balanced",
                           regularization_c=1.0, tta=True, threads=1)
-            before = train_classical("lr-morph", train, val, root, ["a", "b"], config, root)
-            after = predict_classical(root, val, root, True, 1)
-            for mode in ("single", "d4"):
-                np.testing.assert_array_equal(before[mode], after[mode])
+            models = ["lr-morph", "svm-morph"]
+            if find_spec("xgboost"):
+                models.append("xgb-morph")
+            for name in models:
+                with self.subTest(model=name):
+                    before = train_classical(name, train, val, root, ["a", "b"], config, root)
+                    after = predict_classical(root, val, root, True, 1)
+                    for mode in ("single", "d4"):
+                        np.testing.assert_array_equal(before[mode], after[mode])
+                    predict, _, limits = _predictor(root / "model.joblib", dict(config, model=name),
+                                                    ["a", "b"], "cpu")
+                    with limits:
+                        single = predict([load_canvas(root / r["path"], 16) for r in val])
+                    np.testing.assert_allclose(before["single"], single)
 
     def test_fold_map_rejects_crossing_component(self):
         with TemporaryDirectory() as directory:

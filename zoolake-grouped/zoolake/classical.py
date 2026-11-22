@@ -75,9 +75,9 @@ def _feature_array(root, rows, side, multi_view, *, morphology=False):
     return np.asarray(features)
 
 
-def _build_model(name, config):
+def _build_model(name, config, n_classes):
     balance = "balanced" if config["class_weight"] == "balanced" else None
-    if name in {"lr", "lr-morph"}:
+    if name == "lr":
         return make_pipeline(
             StandardScaler(),
             LogisticRegression(
@@ -101,7 +101,8 @@ def _build_model(name, config):
         raise RuntimeError("Install requirements-xgb.txt to run XGBoost.") from error
     return XGBClassifier(
         n_estimators=120, max_depth=5, learning_rate=0.1, tree_method="hist",
-        objective="multi:softprob", random_state=config["seed"], n_jobs=config["threads"],
+        objective="multi:softprob" if n_classes > 2 else "binary:logistic",
+        random_state=config["seed"], n_jobs=config["threads"],
     )
 
 
@@ -119,7 +120,8 @@ def _predict(bundle, rows, root, tta, threads):
 
 def train_classical(model_name, train, validation, root, labels, config, out_dir):
     augment = config["augment"] == "d4"
-    morphology = model_name == "lr-morph"
+    morphology = model_name.endswith("-morph")
+    estimator_name = model_name.removesuffix("-morph")
     features = _feature_array(root, train, config["image_side"], augment, morphology=morphology)
     encoder = LabelEncoder().fit(labels)
     if encoder.classes_.tolist() != labels:
@@ -128,12 +130,12 @@ def train_classical(model_name, train, validation, root, labels, config, out_dir
     target = np.repeat(target, features.shape[1])
     if np.unique(target).size != len(labels):
         raise ValueError("Every label needs at least one training image.")
-    model = _build_model(model_name, config)
+    model = _build_model(estimator_name, config, len(labels))
     fit_options = {}
     # Each source image contributes the same loss weight in both augmentation arms.
-    if augment or model_name == "xgb":
+    if augment or estimator_name == "xgb":
         weights = np.full(len(target), 1.0 / features.shape[1])
-        if model_name == "xgb":
+        if estimator_name == "xgb":
             if config["class_weight"] == "balanced":
                 weights *= len(target) / (len(labels) * np.bincount(target)[target])
             fit_options["sample_weight"] = weights

@@ -123,7 +123,11 @@ def freeze(runs, split_path, output):
     with TemporaryDirectory(prefix=".freeze-", dir=output.parent) as temporary:
         staged = Path(temporary) / "selection.json"
         staged.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
-        os.link(staged, output)
+        # Windows rename is atomic and refuses to replace an existing selection.
+        if os.name == "nt":
+            staged.rename(output)
+        else:
+            os.link(staged, output)
     chosen = result["chosen"]
     print(f"Frozen {chosen['run']} ({chosen['evaluation_view']}), "
           f"validation macro-F1 {chosen['chosen_validation_macro_f1']:.4f}.")
