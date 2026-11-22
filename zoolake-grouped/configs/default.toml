@@ -1,0 +1,27 @@
+[data]
+root = "../data/zoolake"
+audit_dir = "artifacts/audit"
+split_dir = "artifacts/splits"
+audit_group_by = "three_minutes"
+
+[splits]
+strategy = "stratified"
+group_by = "group"
+seed = 464
+subset_seeds = [464, 465, 466]
+
+[training]
+model = "lr"
+seed = 464
+fraction = 100
+augment = "none"
+tta = false
+image_side = 128
+class_weight = "balanced"
+regularization_c = 1.0
+threads = 4
+epochs = 6
+batch_size = 64
+learning_rate = 0.001
+device = "auto"
+workers = 0

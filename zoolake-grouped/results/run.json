@@ -1,0 +1,35 @@
+{
+  "config": {
+    "model": "lr",
+    "seed": 464,
+    "fraction": 100,
+    "augment": "none",
+    "tta": false,
+    "image_side": 128,
+    "class_weight": "balanced",
+    "regularization_c": 1.0,
+    "threads": 4,
+    "epochs": 6,
+    "batch_size": 64,
+    "learning_rate": 0.001,
+    "device": "auto",
+    "workers": 0
+  },
+  "split_sha256": "58e6fc7fc5e1935c43f035922b273440a6609e45d6050a86e2c11a251249bc91",
+  "model_file": "model.joblib",
+  "model_sha256": "d2eea4396a4cc5311ff6002aaa35a4bc6b008da0d60aa9cee0494a99236bbc9b",
+  "versions": {
+    "python": "3.13.3",
+    "machine": "arm64",
+    "numpy": "2.2.5",
+    "Pillow": "11.2.1",
+    "scipy": "1.17.0",
+    "scikit-learn": "1.8.0",
+    "matplotlib": "3.10.1",
+    "torch": "2.10.0",
+    "torchvision": "0.25.0"
+  },
+  "training_images": 12556,
+  "validation_images": 2690,
+  "fit_and_predict_seconds": 10.803834667000046
+}

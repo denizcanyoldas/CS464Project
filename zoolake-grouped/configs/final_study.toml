@@ -1,0 +1,51 @@
+[scratch]
+models = ["scratch"]
+fractions = [25, 100, 10, 50]
+augmentations = ["none", "d4"]
+seeds = [464, 465, 466]
+epochs = 6
+image_side = 96
+batch_size = 64
+class_weight = "balanced"
+device = "mps"
+tta = true
+
+[transfer]
+models = ["efficientnet-b0"]
+fractions = [25, 100, 10, 50]
+augmentations = ["none", "d4"]
+seeds = [464]
+epochs = 6
+image_side = 96
+batch_size = 64
+class_weight = "balanced"
+device = "mps"
+tta = true
+
+[weighting]
+models = ["scratch"]
+fractions = [10, 100]
+augmentations = ["d4"]
+seeds = [464]
+epochs = 6
+image_side = 96
+batch_size = 64
+class_weight = "none"
+device = "mps"
+tta = true
+
+[svm]
+models = ["svm"]
+fractions = [100]
+augmentations = ["none"]
+seeds = [464]
+device = "cpu"
+tta = false
+
+[xgb]
+models = ["xgb"]
+fractions = [100]
+augmentations = ["none"]
+seeds = [464]
+device = "cpu"
+tta = false
