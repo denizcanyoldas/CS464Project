@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from collections import Counter, defaultdict
+import csv
 from hashlib import sha256
 import json
 from math import ceil
@@ -66,6 +67,33 @@ def _components(records, group_by):
 def _component_support(components, labels):
     support = Counter(label for group in components for label in {r["label"] for r in group})
     return {label: support[label] for label in labels}
+
+
+def _restore_folds(path, components, labels):
+    """Restore the published group map while enforcing all audit links and label coverage."""
+    folds = {}
+    with path.open(encoding="utf-8", newline="") as stream:
+        reader = csv.DictReader(stream)
+        if reader.fieldnames != ["group", "split"]:
+            raise ValueError("Fold map requires group,split columns.")
+        for entry in reader:
+            key, fold = entry["group"], entry["split"]
+            if not key or key in folds or fold not in PARTITIONS or None in entry:
+                raise ValueError(f"Invalid or repeated group at fold-map row {reader.line_num}.")
+            folds[key] = fold
+    if set(folds) != {row.get("group") for group in components for row in group}:
+        raise ValueError("Fold map groups differ from the cleaned audit.")
+    assignments, support = {}, defaultdict(set)
+    for group in components:
+        partitions = {folds[row["group"]] for row in group}
+        if len(partitions) != 1:
+            raise ValueError("Fold map splits a linked component across partitions.")
+        fold = partitions.pop()
+        assignments[group[0]["path"]] = fold
+        support[fold].update(row["label"] for row in group)
+    if any(support[fold] != set(labels) for fold in PARTITIONS):
+        raise ValueError("Fold map omits labels in one or more partitions.")
+    return assignments
 
 
 def _provider_diagnostics(records, components, labels, raw_provider):
@@ -346,6 +374,7 @@ def create_splits(
     *,
     group_by: str = "group",
     time_limit_seconds: float = 30,
+    fold_map: Path | None = None,
 ) -> dict:
     if strategy not in {"provider", "stratified"}:
         raise ValueError("Choose split strategy 'provider' or 'stratified'.")
@@ -377,7 +406,11 @@ def create_splits(
 
     provider = _provider_diagnostics(records, components, labels, audit.get("provider", {}))
     solver = None
-    if strategy == "provider":
+    if fold_map is not None:
+        if strategy == "provider":
+            raise ValueError("A frozen fold map cannot be combined with provider splits.")
+        assignments = _restore_folds(fold_map, components, labels)
+    elif strategy == "provider":
         if not provider["eligible"]:
             raise ValueError(
                 "Provider partitions fail validation after quarantine: "
@@ -409,7 +442,7 @@ def create_splits(
         "audit_sha256": sha256(audit_bytes).hexdigest(),
         "labels": labels,
         "records": manifest,
-        "strategy": strategy,
+        "strategy": "frozen group map" if fold_map is not None else strategy,
         "split_seed": split_seed,
         "group_by": group_by,
         "audit_group_by": audit.get("group_by"),

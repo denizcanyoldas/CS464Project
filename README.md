@@ -1,5 +1,7 @@
 # CS464 · Sample-efficient, rotation-robust plankton classification
 
+**Grouped morphology experiment.** Adding 31 image-derived shape and texture features raised full-training validation macro-F1 from **0.5275 to 0.6169** on one frozen, three-minute grouped split. The repository-root baseline scored **0.5253** when refit on those same folds. The rest of this page describes the original provider-split experiment. [Paired results, predictions and reproduction commands](zoolake-grouped/results/morphology/README.md)
+
 Can a classifier recognize the same plankton after a rotation, and how much labeled data does it need? This first experiment transfers the proposal's questions to ZooLake. It trains a multinomial logistic regression on image features and measures sample efficiency and rotation sensitivity.
 
 ![Learning curves, rotation scores and four labeled examples](results/overview.png)
