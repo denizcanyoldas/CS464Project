@@ -1,0 +1,14 @@
+[transfer]
+models = ["efficientnet-b0"]
+fractions = [25, 100]
+augmentations = ["none", "d4"]
+seeds = [464, 465, 466]
+epochs = 6
+image_side = 96
+batch_size = 64
+class_weight = "balanced"
+learning_rate = 0.001
+threads = 4
+workers = 0
+device = "mps"
+tta = true

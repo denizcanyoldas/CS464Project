@@ -52,6 +52,24 @@ DYLD_LIBRARY_PATH="$openmp_dir" python scripts/run_final_study.py xgb
 
 Run `python -m zoolake.study --help`, `python -m zoolake.rotations --help`, and `python -m zoolake.finalize --help` for the aggregation, angle sweep, and locked holdout entry points. Each image has one rotation-safe canvas shared across the eight angles. The sweep resizes only crops that need extra clearance, so its 0° score belongs to the angle sweep. The ordinary validation score uses the original canvas.
 
+### EfficientNet-B0 replication
+
+The [replication config](configs/efficientnet_replication.toml) repeats the 25% (3,139 images) and 100% (12,556 images) conditions at seeds 464–466. Each seed and budget uses the same training images with and without D4 augmentation. The runner selects each checkpoint by single-view validation macro-F1 and also scores eight-view D4 inference on the same checkpoint. The summary reports macro-F1, minority macro-F1 and paired differences for training augmentation and inference averaging.
+
+Run from `zoolake-grouped` with the CNN dependencies installed. Set `ZOOLAKE_DATA_ROOT` to the extracted ZooLake archive directory that contains `data/`. The repository root's `folds.csv` restores the archived study's image assignments and nested training subsets without using the solver. Skip the audit and split commands when their matching outputs already exist.
+
+```bash
+python -m zoolake audit
+python -m zoolake split --fold-map ../folds.csv --out artifacts/splits/efficientnet-replication
+python scripts/run_final_study.py transfer --study configs/efficientnet_replication.toml \
+  --split artifacts/splits/efficientnet-replication/splits.json \
+  --out artifacts/runs/efficientnet-replication
+python -m zoolake.study --runs artifacts/runs/efficientnet-replication/transfer-* \
+  --out results/efficientnet-replication/validation
+```
+
+Run the aggregation after all 12 fits finish. The replication uses the validation fold throughout. See the [replication results and provenance](results/efficientnet-replication/README.md).
+
 ## Reproduce the baseline
 
 Run from the repository root. The raw data and Python environment are in sibling directories `../data` and `../.venv`. The project was exercised with Python 3.13.3.

@@ -63,12 +63,13 @@ def main():
     parser.add_argument("stages", nargs="+")
     parser.add_argument("--study", type=Path, default=ROOT / "configs/final_study.toml")
     parser.add_argument("--out", type=Path, default=ROOT / "artifacts/runs/final-study")
+    parser.add_argument("--split", type=Path, help="Use an existing frozen split manifest")
     parser.add_argument("--device", choices=["cpu", "mps", "cuda"])
     args = parser.parse_args()
     config = ROOT / "configs/default.toml"
     defaults = read_toml(config)
     stages = read_toml(args.study)
-    split = ROOT / defaults["data"]["split_dir"] / "splits.json"
+    split = args.split.resolve() if args.split else ROOT / defaults["data"]["split_dir"] / "splits.json"
     digest = sha256(split)
     env = {
         **os.environ, "MPLBACKEND": "Agg", "PYTHONDONTWRITEBYTECODE": "1",
