@@ -70,7 +70,7 @@ class FinalizeTests(unittest.TestCase):
         second = self.make_run("beta", 0.6, 0.6)
         third = self.make_run("gamma", 0.6)
         frozen = self.freeze(third, second, first)
-        self.assertEqual(frozen["chosen"]["run"], "runs/beta")
+        self.assertEqual(Path(frozen["chosen"]["run"]), Path("runs") / "beta")
         self.assertEqual(frozen["chosen"]["evaluation_view"], "single")
 
     def test_evaluation_verifies_and_delegates_only_chosen_view_and_device(self):

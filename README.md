@@ -4,6 +4,8 @@ Bilkent University · CS 464 Machine Learning · Kerem Emre Bayrak, Deniz Can Yo
 
 The TA asked us to continue with ZooLake instead of the Galaxy10 DECaLS dataset in our proposal.
 
+[Deniz's shared-fold results](zoolake-grouped/results/deniz-common/README.md) compare morphology features in LR, SVM and XGBoost and show Grad-CAM examples for a separate EfficientNet-B0 validation run. The [TA's written feedback](zoolake-grouped/references/TA_DATASET_FEEDBACK.md) explains the change of dataset.
+
 | Folder | Contents |
 | --- | --- |
 | [`zoolake-grouped/`](zoolake-grouped/README.md) | **Main project.** Grouped split, classical models, CNNs, rotation experiments, morphology features, progress report |

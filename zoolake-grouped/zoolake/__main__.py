@@ -13,7 +13,7 @@ import time
 import tomllib
 
 
-CLASSICAL = ("lr", "lr-morph", "svm", "xgb")
+CLASSICAL = ("lr", "lr-morph", "svm", "svm-morph", "xgb", "xgb-morph")
 CNN = ("scratch", "efficientnet-b0")
 MODEL_FILES = {**dict.fromkeys(CLASSICAL, "model.joblib"), **dict.fromkeys(CNN, "checkpoint.pt")}
 

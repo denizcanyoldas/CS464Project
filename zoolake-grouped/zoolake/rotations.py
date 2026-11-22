@@ -76,7 +76,7 @@ def _predictor(model_path, settings, labels, device):
         import joblib
         from threadpoolctl import threadpool_limits
 
-        from .classical import image_features
+        from .classical import describe_view
 
         if device not in (None, "auto", "cpu"):
             raise ValueError("Classical models require --device cpu or auto.")
@@ -88,7 +88,8 @@ def _predictor(model_path, settings, labels, device):
             raise ValueError("The saved model's probability columns differ from the run manifest.")
 
         def predict(canvases):
-            return model.predict_proba(np.stack([image_features(image) for image in canvases]))
+            morphology = bundle.get("morphology", False)
+            return model.predict_proba(np.stack([describe_view(image, morphology) for image in canvases]))
 
         return predict, "cpu", threadpool_limits(limits=settings["threads"])
 

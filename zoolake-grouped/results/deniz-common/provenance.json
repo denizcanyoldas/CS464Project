@@ -1,0 +1,32 @@
+{
+  "portable_membership_sha256": "686731c225aaa96ee13bcbeaf29035a3eee08541a2d15e59ee450d840e0e83fc",
+  "local_manifest_sha256": "938b52b664174f40d3b13988cf13e8f42618023dfdf02d5c60e0ec553adb6e22",
+  "full_training": 12556,
+  "validation": 2690,
+  "models": {
+    "lr-100-464": "0d794114ccf6bb01d9b8086c76a947b4f1d6fdcecf847f6f01e284c17ba2595e",
+    "lr-morph-100-464": "b17eedde0fae2d5956df6da3351dc09b95d0ddc1c778660dfcda9f32d1ca9725",
+    "svm-100-464": "3ade1372b4dfa5c9047893727da84818b03801606961a397cdbe4ec153ab4654",
+    "svm-morph-100-464": "1c207123117602cbfd26e2796ed2d6e65b1d0b4c2127fe8ab591866ed5b47d07",
+    "xgb-100-464": "39682de6b0f53ce7f924fde071fec19eee3d5c3684f12fd9b6dee17cb2b18c82",
+    "xgb-morph-100-464": "1fed54bb8965f48c33534f799e5cf437850785aeaff176473e4095b7f79647cc",
+    "lr-10-464": "af3368f59d9005c5514a45552387db4ba354633359243e15721a04a84eddcc6d",
+    "lr-morph-10-464": "29ec4823c6b9d24882bdc1c5849736d91c4c40e34d05e003042878ad61adcc74",
+    "lr-10-465": "7497b76e916902bcb646e77263825876d1539e5eb87b2483ead2fba18bcc78b6",
+    "lr-morph-10-465": "18bd44e9dd5fca32c63711b38d94e0b54f0e32568fa011dca41f75bfcd125cd5",
+    "lr-10-466": "a5f99f313e73ae882b5de8d68e41b0e174e58070a2f08f93456d2a6ff1e32b32",
+    "lr-morph-10-466": "da7c4689f223f64a85ba800045892f39101da7e2a74d862a09dcfd9effe339b8"
+  },
+  "packages": {
+    "python": "3.12.14",
+    "machine": "AMD64",
+    "numpy": "2.2.5",
+    "Pillow": "11.2.1",
+    "scipy": "1.17.0",
+    "scikit-learn": "1.8.0",
+    "matplotlib": "3.10.1",
+    "torch": "2.10.0+cu128",
+    "torchvision": "0.25.0+cu128",
+    "xgboost": "3.1.3"
+  }
+}
