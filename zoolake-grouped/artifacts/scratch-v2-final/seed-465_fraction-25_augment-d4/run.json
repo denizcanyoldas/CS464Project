@@ -1,0 +1,28 @@
+{
+  "experiment": "scratch-cnn-v2",
+  "config": {
+    "model": "scratch",
+    "seed": 465,
+    "fraction": 25,
+    "augment": "d4",
+    "tta": true,
+    "image_side": 96,
+    "class_weight": "balanced",
+    "threads": 4,
+    "epochs": 50,
+    "batch_size": 64,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "device": "cuda",
+    "workers": 0,
+    "patience": 6,
+    "min_delta": 0.0001
+  },
+  "split_sha256": "cffff06a321d2949f7298d71343584e33883d4e2db7bb600125f93cbcfb1e2a6",
+  "model_file": "checkpoint.pt",
+  "model_sha256": "a7f1d94114f6f19563564af3a7fee46a79fbc164e27d4804c7217f68d469baaa",
+  "training_images": 3139,
+  "validation_images": 2690,
+  "fit_and_predict_seconds": 106.31074030000309,
+  "dataset_root": "C:\\Users\\Msi\\Desktop\\CS464\\CS464Project\\CS464Project-main\\data\\zoolake"
+}
