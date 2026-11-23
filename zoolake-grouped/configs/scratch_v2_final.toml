@@ -1,0 +1,28 @@
+[data]
+# Resolved from the zoolake-grouped project directory.
+root = "../data/zoolake"
+
+[experiment]
+output_root = "artifacts/scratch-v2-final"
+seeds = [464, 465, 466]
+fractions = [10, 25, 50, 100]
+augmentations = ["none", "d4"]
+
+[training]
+model = "scratch"
+seed = 464
+fraction = 100
+augment = "none"
+tta = true
+image_side = 96
+class_weight = "balanced"
+threads = 4
+epochs = 50
+batch_size = 64
+learning_rate = 0.001
+weight_decay = 0.0001
+device = "cuda"
+workers = 0
+patience = 6
+min_delta = 0.0001
+
